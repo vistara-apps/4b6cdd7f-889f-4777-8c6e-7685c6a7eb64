@@ -1,13 +1,16 @@
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY || process.env.OPENAI_API_KEY,
-  baseURL: "https://openrouter.ai/api/v1",
-  dangerouslyAllowBrowser: true,
-});
+function getOpenAIClient() {
+  return new OpenAI({
+    apiKey: process.env.OPENROUTER_API_KEY || process.env.OPENAI_API_KEY || 'dummy-key-for-build',
+    baseURL: "https://openrouter.ai/api/v1",
+    dangerouslyAllowBrowser: true,
+  });
+}
 
 export async function generateAdCopy(productName: string, productImage: string) {
   try {
+    const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
       model: "google/gemini-2.0-flash-001",
       messages: [
@@ -42,6 +45,7 @@ export async function generateAdCopy(productName: string, productImage: string) 
 
 export async function generateOptimizationSuggestions(performanceData: any) {
   try {
+    const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
       model: "google/gemini-2.0-flash-001",
       messages: [
